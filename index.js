@@ -54,7 +54,7 @@ function decodeSignature (buffer) {
   }
 }
 
-function magicHash (message, messagePrefix) {
+export function createPrefixedMessage(message, messagePrefix) {
   messagePrefix = messagePrefix || '\u0018Bitcoin Signed Message:\n'
   if (!Buffer.isBuffer(messagePrefix)) {
     messagePrefix = Buffer.from(messagePrefix, 'utf8')
@@ -69,7 +69,11 @@ function magicHash (message, messagePrefix) {
   messagePrefix.copy(buffer, 0)
   varuint.encode(message.length, buffer, messagePrefix.length)
   message.copy(buffer, messagePrefix.length + messageVISize)
-  return hash256(buffer)
+  return buffer;
+}
+
+function magicHash (message, messagePrefix) {
+  return hash256(createPrefixedMessage(buffer));
 }
 
 function prepareSign (
