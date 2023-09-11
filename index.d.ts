@@ -17,6 +17,11 @@ export interface SignerAsync {
   sign(hash: Buffer, extraEntropy?: Buffer): Promise<{ signature: Buffer; recovery: number; }>;
 }
 
+export function createPrefixedMessage(  
+  message: string | Buffer,
+  messagePrefix?: string
+): Buffer;
+
 export function magicHash(
   message: string | Buffer,
   messagePrefix?: string
