@@ -54,7 +54,7 @@ function decodeSignature (buffer) {
   }
 }
 
-export function createPrefixedMessage(message, messagePrefix) {
+function createPrefixedMessage(message, messagePrefix) {
   messagePrefix = messagePrefix || '\u0018Bitcoin Signed Message:\n'
   if (!Buffer.isBuffer(messagePrefix)) {
     messagePrefix = Buffer.from(messagePrefix, 'utf8')
@@ -237,6 +237,7 @@ function verify (message, address, signature, messagePrefix, checkSegwitAlways) 
 }
 
 module.exports = {
+  createPrefixedMessage: createPrefixedMessage,
   magicHash: magicHash,
   sign: sign,
   signAsync: signAsync,
