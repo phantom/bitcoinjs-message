@@ -73,7 +73,7 @@ function createPrefixedMessage(message, messagePrefix) {
 }
 
 function magicHash (message, messagePrefix) {
-  return hash256(createPrefixedMessage(buffer));
+  return hash256(createPrefixedMessage(message, messagePrefix));
 }
 
 function prepareSign (
