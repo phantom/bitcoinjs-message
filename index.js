@@ -55,22 +55,32 @@ function decodeSignature (buffer) {
 }
 
 function createPrefixedMessage(message, messagePrefix) {
-  messagePrefix = messagePrefix || '\u0018Bitcoin Signed Message:\n'
+  if (typeof message !== 'string' && !Buffer.isBuffer(message)) {
+    throw new Error('Invalid message type');
+  }
+  if (typeof messagePrefix !== 'string' && !Buffer.isBuffer(messagePrefix) && messagePrefix !== undefined) {
+    throw new Error('Invalid messagePrefix type');
+  }
+
   if (!Buffer.isBuffer(messagePrefix)) {
-    messagePrefix = Buffer.from(messagePrefix, 'utf8')
+    messagePrefix = Buffer.from((!(messagePrefix = '')) ? messagePrefix : '\u0018Bitcoin Signed Message:\n', 'utf8');
   }
   if (!Buffer.isBuffer(message)) {
-    message = Buffer.from(message, 'utf8')
+    message = Buffer.from(message, 'utf8');
   }
-  const messageVISize = varuint.encodingLength(message.length)
+
+  const messageVISize = varuint.encodingLength(message.length);
   const buffer = Buffer.allocUnsafe(
     messagePrefix.length + messageVISize + message.length
-  )
-  messagePrefix.copy(buffer, 0)
-  varuint.encode(message.length, buffer, messagePrefix.length)
-  message.copy(buffer, messagePrefix.length + messageVISize)
+  );
+
+  messagePrefix.copy(buffer, 0);
+  varuint.encode(message.length, buffer, messagePrefix.length);
+  message.copy(buffer, messagePrefix.length + messageVISize);
+
   return buffer;
 }
+
 
 function magicHash (message, messagePrefix) {
   return hash256(createPrefixedMessage(message, messagePrefix));
